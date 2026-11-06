@@ -67,7 +67,56 @@ https://gist.github.com/seitanmen/ddee9b5f01fa9c4adaeca866ee9192c8
 https://gist.githubusercontent.com/seitanmen/ddee9b5f01fa9c4adaeca866ee9192c8/raw/latest.txt
 ```
 
-## 4. 漏れたとき・失効する��き
+## 4. リポジトリへ公開する場合（Gist ではなく repo を使う）
+
+ローカル側はこのディレクトリを git リポジトリとして初期化済み（`.gitignore` 付き、`publish-repo.sh` 同梱）。
+
+```bash
+cd /Users/seitan/Desktop/work/adblock
+./publish-repo.sh          # repo 作成（無ければ）+ publish + 検証
+./publish-repo.sh --check  # 検証のみ
+```
+
+`publish-repo.sh` は **git data API**（blob → tree → commit → ref update）で push するため、git CLI を使わなくてよいです。
+
+### 必要なスコープ
+
+| トークン種 | 必要な権限 | リポジトリ作成 |
+|---|---|---|
+| classic PAT | `public_repo` | スクリプトが自動作成 |
+| fine-grained PAT | Repository permissions → **Contents: Read and write** | **作成は不可**（Web UI で先に作成が必要） |
+
+> fine-grained PAT ではリポジトリそのものを作れません。下の「A」を推奨します。
+
+### A. 推奨（Web UI で repo を作ってから）
+
+1. https://github.com/new → リポジトリ名 `adblock-filters`、**Public**、README は作らない
+2. https://github.com/settings/personal-access-tokens/new → Fine-grained token
+   - **Repository access**: Only select repositories → `adblock-filters` を選ぶ
+   - **Permissions → Repository permissions → Contents**: Read and write
+   - **Expiration**: 30 / 90 日
+3. トークンを保存:
+   ```bash
+   security add-generic-password -a "$USER" -s gh-gist-token -w 'github_pat_xxxxx' -U
+   ```
+4. `./publish-repo.sh` を実行
+
+### B. classic PAT で全部やる
+
+1. https://github.com/settings/tokens/new → **`public_repo`** にチェック（他は不要）
+2. `security add-generic-password -a "$USER" -s gh-gist-token -w 'ghp_xxxxx' -U`
+3. `./publish-repo.sh`（リポジトリが無ければ自動作成）
+
+### publish 後の購読 URL
+
+```
+https://raw.githubusercontent.com/seitanmen/adblock-filters/main/latest.txt
+```
+
+`raw.githubusercontent.com` は CDN キャッシュが短いため、更新は数分以内に反映されます
+（Gist の `/raw/<file>` より反映が早い）。
+
+## 5. 漏れたとき・失効するとき
 
 - 失効: https://github.com/settings/tokens （Delete / Revoke）
 - 失効後も **Gist は公開状態のまま** なので購読 URL はそのまま使えます（publish だけできなくなります）。
