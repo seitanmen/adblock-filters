@@ -1,5 +1,23 @@
 # トークンの管理と publish の使い方
 
+## 0. 最短手順（この Mac で完結・トークン手渡し不要）
+
+この Mac は `gh` CLI が `seitanmen` として `repo` スコープでログイン済み（キーリング保管）です。
+したがって **新しいトークンを作る必要はありません**。
+
+```bash
+cd /Users/seitan/Desktop/work/adblock
+
+# 方法 A: スクリプトで publish（lint + push + 検証つき）
+GH_TOKEN="$(gh auth token)" ./publish-repo.sh
+
+# 方法 B: 通常の git _push（credential helper は設定済み）
+git add -A && git commit -m "..." && git push
+```
+
+上の repo 作成・commit 取得・検証はすべてスクリプト内で行われます。
+`publish-repo.sh` は **branch が無い場合（空 repo）も新規作成**できるようにしてあります。
+
 ## 1. トークンを置く場所（推奨順）
 
 ### A. macOS キーチェーン（推奨・平文がディスクに残りません）
