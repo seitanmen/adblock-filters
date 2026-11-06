@@ -1,0 +1,720 @@
+[
+  {
+    "trigger": {
+      "url-filter": ".*html-load\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*fb\\.html-load\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*v\\.html-load\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*video-loads\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*error-report\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*btloader\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*ad-delivery\\.net.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "raw",
+        "image",
+        "script"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*dns-finder\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "raw"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*securepubads\\.g\\.doubleclick\\.net.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*googlesyndication\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*googleads\\.g\\.doubleclick\\.net.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*ad\\.doubleclick\\.net.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*flux-cdn\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*cpt\\.geniee\\.jp.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*agent\\.intentiq\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*pbxai\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*static\\.ads-twitter\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*b99\\.yahoo\\.co\\.jp.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*s\\.yimg\\.jp/images/listing/tool/cv/ytag\\.js.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*gamewith\\.jp/.*_jack_ad/.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*gamewith\\.jp/ad/.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*gamewith\\.jp/.*/ad/index\\.js.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*gamewith\\.jp/.*/walkthrough/adjack\\.js.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*caprofitx\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*rise\\.enhance\\.co\\.jp.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*criteo\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*static\\.criteo\\.net.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*aladdin\\.genieesspv\\.jp.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*bidswitch\\.net.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*3lift\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*creativecdn\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*adx\\.opera\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*bricks-co\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*onetag-sys\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*fundingchoicesmessages\\.google\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*api-apac\\.intentiq\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*sync6\\.im-apps\\.net.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*sync\\.im-apps\\.net.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*content-loader\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document",
+        "image",
+        "style-sheet"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*css-load\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document",
+        "image",
+        "style-sheet"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*img-load\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document",
+        "image",
+        "style-sheet"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*html-load\\.cc.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document",
+        "image",
+        "style-sheet"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*whoinasmuch\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document",
+        "image",
+        "style-sheet"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*assuredwhoa\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document",
+        "image",
+        "style-sheet"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  },
+  {
+    "trigger": {
+      "url-filter": ".*contentyet\\.com.*",
+      "if-domain": [
+        "*gamewith.jp"
+      ],
+      "resource-type": [
+        "script",
+        "raw",
+        "document",
+        "image",
+        "style-sheet"
+      ]
+    },
+    "action": {
+      "type": "block"
+    }
+  }
+]

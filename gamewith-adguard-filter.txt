@@ -1,0 +1,262 @@
+! ============================================================================
+!  GameWith (gamewith.jp) — AdGuard / uBlock Origin 向けフィルタ
+!  Version : 2026-11-06
+!  Based on : live site analysis (2026-11-06) — 根拠は README.md
+!  Target  : gamewith.jp (PC / モバイル / iPhone Safari)
+! ============================================================================
+!
+!  実測で確認できたものだけをルール化しています。推測によるルールは含めていません。
+!
+!  【重要】AdGuard 標準の Base フィルタには、すでに gamewith.jp 向けの
+!  Ad-Shield 対策（html-load.com）が入っています。本ファイルは
+!  「Base フィルタだけ」で足りない部分（gamewith 固有の広告枠、
+!  Pangle 側の検出、モバイル固有の広告枠）を補完する追加ルール集です。
+!
+! ============================================================================
+!
+! ---------------------------------------------------------------------------
+! [1] Ad-Shield (html-load.com) — サーバー側注入ローダー / 偽エラー画面
+!
+!   実測: ゲーム別ページ（/pokemon-tcg-pocket/ /shironeko/ /fgo/
+!         /xenoblade/article/show/207982 など）のサーバー HTML に
+!       <script async data-sdk="l/1.2.3" nowprocket
+!               src="https://html-load.com/core.js" onload="(難読化)">
+!         と、その直後に難読化インライン・[pos]デコーダが Inclusion されます。
+!         PC / モバイル（iPhone UA）とも同一。
+!         トップ（/）と汎用 PC 記事（/pc/article/show/*）には Inclusion されません。
+!
+!   AdGuard Base の upstream ルールから、gamewith.jp のみに絞って引用。
+! ---------------------------------------------------------------------------
+
+||html-load.com^$script,important,domain=gamewith.jp
+||fb.html-load.com^$script,important,domain=gamewith.jp
+||v.html-load.com^$script,important,domain=gamewith.jp
+||video-loads.com^$script,important,domain=gamewith.jp
+||error-report.com^$domain=gamewith.jp
+||report.error-report.com^$domain=gamewith.jp
+!
+! ★ recovery（復旧）ドメインも必ず遮断すること ★
+!   core.js 内に recovery 用のフォールバックドメイン一覧
+!   (content-loader.com / css-load.com / img-load.com / html-load.cc /
+!    whoinasmuch.com / assuredwhoa.com / contentyet.com) が存在し、
+!   Ad-Shield は CSS・画像・広告を別ドメイン経由で再供給する仕組みを持つ。
+!   → 遮断しないと recovery 経路が生き残りうるため予防的に遮断する。
+!   ※ upstream AdGuard Base は gamewith.jp について recovery ドメインを
+!     遮断していないため、本ファイルで補完しています。
+!   ※ Chromium 実測では recovery 経由の CSS 再供給は観測されていません。
+||content-loader.com^$domain=gamewith.jp
+||css-load.com^$domain=gamewith.jp
+||img-load.com^$domain=gamewith.jp
+||html-load.cc^$domain=gamewith.jp
+||whoinasmuch.com^$domain=gamewith.jp
+||assuredwhoa.com^$domain=gamewith.jp
+||contentyet.com^$domain=gamewith.jp
+
+! 改ざん検知（setAttribute フック）の無効化  ※ upstream Base と同一
+gamewith.jp#%#//scriptlet('trusted-replace-argument', 'HTMLScriptElement.prototype.setAttribute', '1', 'replace:/.+(error-report|new Promise|:window|&&window,|\|\|window,|void 0\]|\)\.join\(String\.fromCharCode|html-load\.com[\s\S]*_onerror).+//g')
+
+! ローダータグの除去（HTML フィルタ。AdGuard のみ。uBO では無視される）
+gamewith.jp$$script[src="html-load.com/"]
+gamewith.jp$$script[src="fb.html-load.com/"]
+gamewith.jp$$script[src="v.html-load.com/"]
+! ローダーと難読化デコーダの両方に付く属性 nowprocket で一括除去
+! （実測: ページ内 nowprocket は Ad-Shield の 2 箇所のみ）
+gamewith.jp$$script[nowprocket]
+
+! recovery（広告再挿入ペイロード）注入の抑止  ※ upstream Base と同一の大型 scriptlet
+gamewith.jp#%#(()=>{const e=/adshield|adsentinel/,t="(function(){})();",r=/^\(\s*\.\.\.\s*([A-Za-z_$][\w$]*)\s*\)\s*=>\s*[A-Za-z_$][\w$]*\s*\.\s*apply\s*\(\s*this\s*,\s*\1\s*\)\s*$/,o=/^function\s*\(\s*\)\s*\{\s*return\s+[A-Za-z_$][\w$]*\s*\.\s*apply\s*\(\s*this\s*,\s*arguments\s*\)\s*;?\s*\}$/,s=/^(?:"use strict"|'use strict');\s*\(\(\)\s*=>\s*\{[\s\S]*\}\)\(\s*\);?\s*$/,p=/^([A-Za-z_$][\w$]*\(\s*\)\s*;)\s*\(async(?:\s+function\s*\(\s*\)|\s*\(\s*\)\s*=>)\s*\{[\s\S]*\}\)\(\s*\);?\s*$/,n=["requestAnimationFrame","requestIdleCallback","setInterval","setTimeout"],a=/html-load\.com|loader\.min\.js|\/recovery(?:-light)?\.js(?:[?#:\s)]|$)|andwonderful\.com\/safe\.min\.js|shieldload\.|:\/\/loader\.|core\.js|\/sdk\.js|\/app\.js|\/main\.js|\/vendor\.js|\/bundle\.js|(?:whoinasmuch|assuredwhoa|contentyet)\.com|\/(?:routes|output|framework|vendors~framework|_vendors-lib\.core|shared)\/.*\.js/,c={apply:Reflect.apply,construct:Reflect.construct,filter:Array.prototype.filter,every:Array.prototype.every,some:Array.prototype.some,isArray:Array.isArray,getOwnPropertyDescriptor:Object.getOwnPropertyDescriptor,includes:String.prototype.includes,regexTest:RegExp.prototype.test,regexExec:RegExp.prototype.exec,functionToString:Function.prototype.toString,queueMicrotask:window.queueMicrotask},y=new Set,i=()=>c.apply(c.regexTest,a,[(new Error).stack]),l=/(['"])recovery\1/,d=/(['"])r_\1/,u=t=>c.apply(c.regexTest,e,[t])&&c.apply(c.includes,t,["currentScript"])&&c.apply(c.includes,t,["postMessage"])&&c.apply(c.regexTest,l,[t])&&c.apply(c.regexTest,d,[t]);let w;if(window.TextDecoder){const e=Object.getPrototypeOf(Uint8Array.prototype),t=c.getOwnPropertyDescriptor(e,Symbol.toStringTag).get,r=c.getOwnPropertyDescriptor(e,"buffer").get,o=c.getOwnPropertyDescriptor(ArrayBuffer.prototype,"byteLength").get,s=c.getOwnPropertyDescriptor(ArrayBuffer.prototype,"resizable")?.get,p=new TextDecoder("utf-8",{fatal:!0}),n=TextDecoder.prototype.decode;w=(e,a=!1)=>{try{const y="Uint8Array"===c.apply(t,e,[]);if(!y&&!a)return"";const i=y?c.apply(r,e,[]):e;if(c.apply(o,i,[])>0&&(!s||!c.apply(s,i,[])))return c.apply(n,p,[e])}catch{}return""}}else w=()=>"";const f=window.crypto?.subtle;if("function"==typeof f?.digest&&window.TextEncoder&&window.TextDecoder){const e=(new TextEncoder).encode(t);f.digest=new Proxy(f.digest,{apply(t,r,o){try{const[t,s]=o;r===f&&"SHA-256"===t&&i()&&u(w(s,!0))&&(o[1]=e)}catch{}return c.apply(t,r,o)}})}const g=()=>{const e={};c.apply(c.queueMicrotask,window,[()=>y.delete(e)]),y.add(e)},_={construct:(r,o,s)=>{let p=!1;try{const[r,s]=o,n=s&&"object"==typeof s?c.getOwnPropertyDescriptor(s,"type")?.value:void 0;("application/javascript"===n||"text/javascript"===n)&&c.isArray(r)&&(c.apply(c.every,r,[e=>"string"==typeof e])&&c.apply(c.some,r,[t=>c.apply(c.regexTest,e,[t])])||1===r.length&&u(w(r[0])))&&i()&&(o[0]=[t],p=!0)}catch(e){}const n=c.construct(r,o,s);if(p)try{g()}catch(e){}return n}};window.Blob=new Proxy(window.Blob,_);const x=window.HTMLScriptElement,h=window.Element?.prototype.getAttribute;let m,A=x?.prototype;for(;A&&(m=c.getOwnPropertyDescriptor(A,"textContent"),!m);)A=Object.getPrototypeOf(A);m?.set&&h&&Object.defineProperty(A,"textContent",{...m,set:new Proxy(m.set,{apply(r,o,s){let p=!1;try{const r=s[0];if("string"==typeof r&&o instanceof x&&c.apply(c.regexTest,e,[r])){const e=e=>c.apply(h,o,[e]),n=e("type"),a=e("recovery"),y=e("data-src");!(a&&y||null===a&&null===y&&u(r))||null!==e("src")||n&&"application/javascript"!==n&&"text/javascript"!==n||!i()||(s[0]=t,p=!0)}}catch(e){}const n=c.apply(r,o,s);if(p)try{g()}catch(e){}return n}})});const T={apply:(e,t,s)=>{const p=y.values().next().value;y.delete(p);try{const[e,t]=s;if(p&&"number"==typeof t&&t>=4900&&t<5100){const t="function"==typeof e?c.apply(c.functionToString,e,[]):"string"==typeof e?e:"";(c.apply(c.includes,t,["new Error"])||"function"==typeof e&&(c.apply(c.regexTest,r,[t])||c.apply(c.regexTest,o,[t])))&&i()&&(s[0]=()=>{})}}catch(e){}return c.apply(e,t,s)}};window.setTimeout=new Proxy(window.setTimeout,T);const j={apply:(e,t,r)=>{try{"function"==typeof r[0]&&c.isArray(t)&&t.length===n.length&&c.apply(c.every,n,[(e,r)=>t[r]===e])&&i()&&(t=c.apply(c.filter,t,[e=>"setTimeout"!==e]))}catch(e){}return c.apply(e,t,r)}};window.Array.prototype.filter=new Proxy(window.Array.prototype.filter,j);const v={apply(e,r,o){const n=c.apply(e,r,o);try{if("string"!=typeof n)return n;const e=e=>c.apply(c.includes,n,[e]),r=()=>e("loader_light")&&e("last_bfa_at")&&e("/report?type=")&&e("as_modal_loaded")&&e("close-error-report")&&e("ECDSA")&&e("P-256"),o=c.apply(c.regexExec,p,[n]);if(o&&r())return o[1];if(!c.apply(c.regexTest,s,[n]))return n;if(e("__as_tag2_done")||e("_as_prehooked")||e("_onload2")||e("_onerror2"))return e("__as_tag2_done")&&e("_as_prehooked")&&e("_onload2")&&e("_onerror2")&&e('data-sdk^="pk/"')?"window.__as_tag2_done=true;void 0;":n;if(e('data-sdk^="pk/"')&&e("/recovery-light.js")&&e("/recovery.js")&&e("__as_cbs")&&e("__as_start_recovery")&&e("AdBlock detected")||r())return t}catch(e){}return n}};window.Array.prototype.join=new Proxy(window.Array.prototype.join,v)})();
+
+! ---------------------------------------------------------------------------
+! [2] Pangle / ByteDance (btloader.com) — アンチアドブロック検出の無効化
+!
+!   実測: flux-cdn.com/client/gamewith/gamewith-jp2.min.js が
+!       pbFlux.importTag("https://btloader.com/tag?o=5727730570625024&upapi=true")
+!       を実行 → Pangle タグが AA 検出を行い、
+!       localStorage "BT_AA_DETECTION" = {"ab":..,"aa":..,"nlf":..} を書き込む。
+!
+!   baits（実測コードより）:
+!     ab : https://ad-delivery.net/px.gif?ch=2&e=...
+!     ab : https://ad.doubleclick.net/favicon.ico?ad=300x250&...
+!     aa : https://ad-delivery.net/px.gif?ch=1&e=...
+!     nlf: https://ab.dns-finder.com/meta/dns, https://wb.dns-finder.com/meta/dns
+!     element: class="ad_row adbannertop ad-mobile ad_sidebar adpopup boxad contentAd"
+!     （上記 baits の 60% 以上が失敗すると ab=true と判定）
+!
+!   実測: 遮断すると ab:true になるが、当該アカウントの wall は無効
+!         （btloader.com/websiteconfig の messageWall.enabled=false）なので
+!         画面が壊れることはなく、検出結果だけが上流に送られます。
+! ---------------------------------------------------------------------------
+
+||btloader.com^$domain=gamewith.jp
+||cdn.btloader.com^$domain=gamewith.jp
+||ad-delivery.net^$domain=gamewith.jp
+||ab.dns-finder.com^$domain=gamewith.jp
+||wb.dns-finder.com^$domain=gamewith.jp
+
+! ---------------------------------------------------------------------------
+! [3] gamewith 独自（first-party）の広告リソース
+!
+!   実測: assets.gamewith.jp/js/dist/jp/gamewith/ad/index.js が
+!         Google Ad Manager（network 26172165）+ Prebid を設定し、
+!         PubMatic / Rubicon / YIELDONE / AppNexus を bidder に使用。
+!         インタースティシャル（/26172165/gw_interstitial = LpF）も含みます。
+!   遮断しても本文・レイアウトは壊れません（2026-11-06 実測、PC/iPhone 両方）。
+! ---------------------------------------------------------------------------
+
+||gamewith.jp/*/gamewith/ad/index.js
+||gamewith.jp/*/walkthrough/adjack.js
+||gamewith.jp/*_jack_ad/
+||gamewith.jp/ad/gamedboverlay/
+!
+! 除外ルール（upstream AdGuard Japanese と同じ）：検索CTAバ너ーの制御スクリプトを
+! 遮断すると閉じるボタンが動かなくなるため、遮断しない。
+!||gamewith.jp/js/dist/jp/search/cta.js
+
+! ---------------------------------------------------------------------------
+! [4] コスモティック（広告枠の非表示）— 実測した DOM セレクタのみ
+! ---------------------------------------------------------------------------
+
+! --- 4a. Google Ad Manager のスロット（広告が抜けると空白だけ残る）
+gamewith.jp##div[id^="div-gpt-ad-"]
+gamewith.jp##div.c-rectangle-ad-wrap
+gamewith.jp##div[class$="adWrapper"]
+
+! --- 4b. gamewith 独自枠（jack / overlay / CTA バナー / ネイティブ広告）
+gamewith.jp###ad-jack
+gamewith.jp##.js-ad-jack
+gamewith.jp##.gwt-ad-jack
+gamewith.jp##.top-jack
+gamewith.jp##.gdb-cta-banner-outer
+gamewith.jp##.gdb-ad-footer-creative
+gamewith.jp##.collaboration-jack-header-wrap
+gamewith.jp##.gdb-header-ad-notice
+gamewith.jp##.home-header-ad-notice-wrapper
+gamewith.jp##.ad-pc-footer
+gamewith.jp##.bbs-ad-content
+gamewith.jp##.gamedb-steam-ad-compact
+gamewith.jp##.walkthrough-ad-ranking-game
+gamewith.jp##.review_amazon_ranking_box
+gamewith.jp##.review_amazon_ranking_container
+gamewith.jp##.review_amazon_ranking_title
+gamewith.jp##.browsi-atf
+gamewith.jp##.brw_flying-carpet
+gamewith.jp##.gwt-pickup-banner
+gamewith.jp##.home-pickup-banner
+gamewith.jp##.gdb-google-search-preferred-source-banner
+gamewith.jp##.walkthrough-official-banner
+! --- 4d. モバイル固有の広告オーバーレイ（実測: iPhone 390x844）---
+! 下部固定バナー広告（.to-btn-area 内の広告部分。閉じるボタンなし）
+gamewith.jp##.c-sp-leaderboard-ad-overlay
+gamewith.jp##.ad-sp-header
+! 検索CTAインタースティシャルのオーバーレイ/暗幕
+gamewith.jp##.js-search-cta-banner-overlay
+! --- 4e. その他の実測広告コンテナ（静的スキャン + 実 DOM）---
+gamewith.jp##.pc-ad-side
+gamewith.jp##.js-article-ad
+gamewith.jp##.js-article-bottom-ad
+gamewith.jp##.js-disabled-insert-article-ad
+gamewith.jp##.js-ad-disabled
+gamewith.jp##ins.adsbygoogle
+gamewith.jp###adsbygoogle
+gamewith.jp###ads-ADU-09YVH64Z
+! 過去のオーバーレイ広告枠（本日マークアップは未検出。保険として）
+gamewith.jp##.overlay-jack
+gamewith.jp##.overlay-creative-ad
+gamewith.jp##._area > a[href*=".onelink.me/"]
+
+! --- 4c. 状態を戻す scriptlet（AdGuard のみ。uBO では無視される）
+gamewith.jp#%#//scriptlet('remove-class', 'is-collaboration-jack', 'body')
+gamewith.jp#%#//scriptlet('set-cookie-reload', 'discarded-search-interstitial-cta-banner', 'true')
+
+! ---------------------------------------------------------------------------
+! [5] サードパーティ広告ネットワーク（任意）
+!   EasyList 等と重複しますが、単独で使う場合の便宜として記載しています。
+! ---------------------------------------------------------------------------
+
+! --- Google Ad Manager / AdSense 系
+||securepubads.g.doubleclick.net^$domain=gamewith.jp
+||googlesyndication.com^$domain=gamewith.jp
+||googleads.g.doubleclick.net^$domain=gamewith.jp
+||ad.doubleclick.net^$domain=gamewith.jp
+||pagead2.googlesyndication.com^$domain=gamewith.jp
+
+! --- FLUX（日本語DSP。fluxtag が Prebid 停止を担当）
+||flux-cdn.com^$domain=gamewith.jp
+
+! --- ヘッダービディング bidder
+||cpt.geniee.jp^$domain=gamewith.jp
+||agent.intentiq.com^$domain=gamewith.jp
+
+! --- Caprofitx / Rise(Enhance) / Criteo / Aladdin Geniee / 各種 user-sync
+! （静的スキャンで実リクエストを確認。ins.adsbygoogle は Caprofitx が注入）
+||cdn.caprofitx.com^$domain=gamewith.jp
+||adn.caprofitx.com^$domain=gamewith.jp
+||rise.enhance.co.jp^$domain=gamewith.jp
+||static-rise.enhance.co.jp^$domain=gamewith.jp
+||gum.criteo.com^$domain=gamewith.jp
+||static.criteo.net^$domain=gamewith.jp
+||aladdin.genieesspv.jp^$domain=gamewith.jp
+||x.bidswitch.net^$domain=gamewith.jp
+||eb2.3lift.com^$domain=gamewith.jp
+||invstatic101.creativecdn.com^$domain=gamewith.jp
+||t.adx.opera.com^$domain=gamewith.jp
+||pbsj.bricks-co.com^$domain=gamewith.jp
+||onetag-sys.com^$domain=gamewith.jp
+||fundingchoicesmessages.google.com^$domain=gamewith.jp
+!
+! --- その他
+||cdn.pbxai.com^$domain=gamewith.jp
+||floor.pbxai.com^$domain=gamewith.jp
+||analytics.pbxai.com^$domain=gamewith.jp
+||static.ads-twitter.com^$domain=gamewith.jp
+||b99.yahoo.co.jp^$domain=gamewith.jp
+||s.yimg.jp/images/listing/tool/cv/ytag.js$domain=gamewith.jp
+
+! ---------------------------------------------------------------------------
+! [6] モバイル / iPhone 固有
+!   実測 (iPhone UA / 390x844):
+!     - ゲーム別ページは PC と同じ HTML 構造で html-load.com ローダーが入る。
+!     - サーバー側は UA で分岐: isMobile=true / DFPTargetOS="iOS" /
+!       isWalkthroughStickyAd=true（PC は false）。Vary: User-Agent は無し。
+!     - 下部固定バナー広告:
+!         .to-btn-area (position:fixed; bottom:0; z-index:50; 高さ138px)
+!           └ .c-sp-leaderboard-ad-overlay → div-gpt-ad-1513304862927-0
+!                                          (/26172165/sp_bottom_native)
+!       ※モバイルには閉じるボタンが無い（PC 側は #gStickyAd + #gCloseButton）。
+!         .c-sp-leaderboard-ad-overlay を消すと下部の空白も消える（実測 h=138→0）。
+!     - 検索CTAインタースティシャル（.gdb-cta-banner, z-index:2147483647 と
+!       .overlay-layer z=2147483646, data-device="sp"）は閉じボタンあり（48px）。
+!     - モバイルの Browsi ネイティブ広告（.brw_flying-carpet）は多数。
+!     - インタースティシャル（gw_interstitial）とヘッダークリエイティブは
+!       当該ページで false（displayGoogleInterstitialAd / isHeaderCreativeAdEnabled）。
+!     - Turnstile / reCAPTCHA はモバイル版 HTML には含まれない。
+!     - iOS ではスクロール連動の広告リフレッシュが意図的に無効化されている
+!       （ad/index.js: isIOS() なら return）。
+!     - アプリ内 WebView（jp.gamewith UA）では isHideOverlay=true で下部固定
+!       バナーは出ないが、Ad-Shield ローダーは依然ロードされる。
+! ---------------------------------------------------------------------------
+
+! 下部固定バナー（モバイル）。消したい場合は上記 4a の div[id^="div-gpt-ad-"] で
+! まとめて消えるので、必要なら個別指定は不要です。
+!
+! アプリ導線（.to-btn-area / .to-btn）は広告ではなく公式アプリ導線です。
+! AdGuard の Annoyances フィルタは .to-btn-area ごと非表示にしていますが、
+! アプリ導線も消えるため、ここでは広告部分だけを対象にしています。
+! まとめて消したい場合は以下を解禁してください。
+! gamewith.jp##.to-btn-area
+
+! ---------------------------------------------------------------------------
+! [7] レイアウトを壊さないためにやってはいけないこと
+! ---------------------------------------------------------------------------
+!   - gamewith.jp への $generichide / $ghide（本文が丸ごと非表示になります）
+!   - assets.gamewith.jp/css/* の遮断（ページが無スタイルになります）
+!   - gamewith.jp##body のような広すぎるコスモティック
+!   - [1] の Ad-Shield 対策 scriptlet を外すこと
+!     → 偽のエラー画面が出ます。core.js 内の文言は
+!       "Please allow ads on this site. Click OK to learn more."
+!       （英語のみ。日本語表示は無く、「広告を表示できるようにしてくれ」等同義）。
+!   - DNS フィルタ（AdGuard for iOS の DNS モード等）だけで Ad-Shield を倒すこと
+!     → html-load.com は first-party 扱いなので、DNS ブロックでは壁が発動する
+!       反而は倒せません（Yuki2718 / AdGuard issue #213713）。
+!       必ずコンテンツブロッカーのルール（[1]）と併用してください。
+! ============================================================================
