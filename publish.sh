@@ -118,7 +118,7 @@ done
 
 cat <<EOF
 
-canonical URL (以此wards 同じリンク):
+canonical URL (以降の publish はこのリンクへ):
   https://gist.githubusercontent.com/${GIST_OWNER}/${GIST_ID}/raw/latest.txt
 EOF
 [ "$fail" -eq 0 ] || { echo "WARNING: 差分あり。API 上の内容を確認してください。" >&2; exit 1; }
