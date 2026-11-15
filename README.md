@@ -161,6 +161,65 @@ gamewith.jp
 
 ---
 
+## 1.6 Blogger / Blogspot プラットフォームのアンチアドブロック（2026-11-15 追加）
+
+対象: `doublecodes.blogspot.com` などの Blogspot 製ブログ（**Ad-Shield/Pangle とは別系統**）。
+
+### 仕組み
+
+Blogspot は AdSense 以外の仕組みを使います。Blogger 共通スクリプト（Plus UI）内の `xe.iBlk()` が遮断判定を行います:
+
+```js
+async iBlk(){
+  // 1) 18px の bait を 3 個 body に生成（position:fixed; bottom:-99px）
+  let n = [ ["div","div-gpt-ad-3061307416813-0",null,t],
+            ["div",null,"textads banner-ads banner_ads ad-unit ad-zone ad-space adsbox ads",t],
+            ["ins",null,"adsbygoogle",t] ];
+  // 2) 50ms 後に offsetHeight を確認
+  (18!==o(n[0]) || 18!==o(n[1]) || 18!==o(n[2]) || n[2].firstElementChild) ? i(true)
+  // 3) どれでもなければ AdSense 到達性 fetch で判定
+  : fetch("https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js")
+        .then(e => e.ok && e.headers.has("Content-Length") ? i(false) : i(true))
+}
+```
+
+判定後、**ブログ側が追加したウィジェット**が全画面オーバーレイとして表示されます:
+
+```html
+<div class='widget HTML papW js-antiadblocker' data-version='2' hidden='hidden' id='HTML61'>
+  <div class='papB'>
+    <div class='papT'>AdBlock detected!</div>
+    <div class='papC'>We have detected that you are using adblocking plugin in your browser. ...</div>
+```
+
+呼び出し側（Blogger 共通）:
+```js
+let l = r(".js-antiadblocker");
+l && A.then(() => xe.iBlk()).then(e => { e && (U.iAd ? V("AdBlock is enabled! ...") : (n(), he(l))) })
+```
+
+### 重要な落とし穴
+
+- **AdSense をネットワーク遮断すると必ず「遮断あり」と判定されます**（fetch が失敗するため）。検査を回避できません。
+- **`ins.adsbygoogle` を cosmetic で隠すと判定されます**（bait の高さが 0 になるため）。
+- **遮断していないブラウザでも誤検知することが実測されました**（Desktop control で overlay が出たケースあり。8 回の再実行では再現せず＝タイミング依存）。
+- つまり **判定結果に意味がない**ので、対策としては **表示だけを止める**のが確実です。
+
+### 採用ルール
+
+```
+*.blogspot.com##.js-antiadblocker
+*.blogspot.com##.papW
+```
+
+実測: 強制的な cosmetic（`.ads`/`.ad-unit`/`.adsbox` 等を display:none）＋AdSense 遮断の状態でも、
+上記ルール入りなら overlay は非表示（`display:none` / 高さ 0）となり本文は通常表示。
+（`.js-antiadblocker` は `hidden` 属性付きで JS が表示する → CSS `display:none !important` が JS に勝ちます。）
+
+> 注意: 独自ドメインで Blogger を使っているブログには `blogspot.com` ルールが効きません（その場合はドメイン指定のルールを追加）。
+
+---
+
 ## 2. 生成物
 
 | ファイル | 用途 |

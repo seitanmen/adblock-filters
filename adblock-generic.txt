@@ -108,6 +108,27 @@
 ||fundingchoicesmessages.google.com^
 
 ! ---------------------------------------------------------------------------
+! [4b] Blogger / Blogspot プラットフォームのアンチアドブロック
+!   実測 (doublecodes.blogspot.com, 2026-11-15):
+!   ・ Blogger 共通スクリプト (Plus UI) の xe.iBlk() が遮断判定を行う。
+!     ・baits 3 個を body に生成（18px / position:fixed;bottom:-99px）:
+!         #div-gpt-ad-3061307416813-0 /
+!         .textads.banner-ads.banner_ads.ad-unit.ad-zone.ad-space.adsbox.ads /
+!         ins.adsbygoogle
+!     ・各 bait の offsetHeight が 18 以外、または ins に子要素があれば true。
+!     ・さらに pagead2.googlesyndication.com/pagead/js/adsbygoogle.js への
+!       fetch が失敗／Content-Length が無ければ true（＝AdSense を遮断すると
+!       必ず「遮断あり」と判定される）。
+!   ・判定後、ブログ側が追加した .js-antiadblocker ウィジェットを
+!     全画面オーバーレイ（"AdBlock detected!"）として表示する。
+!     ※遮断していない浏览器でも誤検知することが実測で確認された。
+!   → 判定を止めるのは困難なので、表示だけを確実に止める。
+! ---------------------------------------------------------------------------
+
+*.blogspot.com##.js-antiadblocker
+*.blogspot.com##.papW
+
+! ---------------------------------------------------------------------------
 ! [5] 任意（トラッキング・セッション計測まで止める場合）
 ! ---------------------------------------------------------------------------
 ! ||clarity.ms^

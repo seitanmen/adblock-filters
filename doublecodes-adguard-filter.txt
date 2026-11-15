@@ -1,0 +1,26 @@
+! ============================================================================
+!  doublecodes.blogspot.com — AdGuard / uBlock Origin 専用フィルタ
+!  Version : 2026-11-15
+!  実測: https://doublecodes.blogspot.com/ （Blogger 製ブログ）
+! ============================================================================
+!
+!  仕組み: Blogger プラットフォーム共通のアンチアドブロック。
+!  Blogger 共通スクリプトの xe.iBlk() が 3 個の bait 要素と
+!  pagead2.googlesyndication.com への fetch で遮断を判定し、
+!  ブログが追加した .js-antiadblocker ウィジェットを
+!  全画面オーバーレイ（"AdBlock detected!"）として表示する。
+!
+!  → 判定結果ではなく「表示」を止めるのが確実（誤検知もあるため）。
+!
+!  注意: ins.adsbygoogle を cosmetic で隠すと bait の高さが 0 になり
+!        検出が true になります。広告を消したい場合はネットワーク側で
+!        AdSense を遮断してください（検出は true になりますが、
+!        オーバーレイは下のルールで隠れます）。
+! ============================================================================
+
+doublecodes.blogspot.com##.js-antiadblocker
+doublecodes.blogspot.com##.papW
+
+! --- 広告（AdSense auto-ads）: ネットワーク側で遮断 ---
+||pagead2.googlesyndication.com/pagead/js/adsbygoogle.js$domain=doublecodes.blogspot.com
+||pagead2.googlesyndication.com/pagead/js/adsbygoogle.js$domain=*.blogspot.com

@@ -10,6 +10,7 @@
 | `latest.txt` | **汎用フィルタ（主）**。常に最新版に更新される固定 URL。 |
 | `adblock-generic.txt` | 汎用フィルタの内容（名前付き版・`latest.txt` と同一） |
 | `gamewith-adguard-filter.txt` | gamewith.jp 専用（汎用 + サイト固有の cosmetic / scriptlet / first-party 広告枠） |
+| `doublecodes-adguard-filter.txt` | Blogspot 製ブログ専用（Blogger プラットフォームの anti-adblock 対策） |
 | `gamewith-safari-content-blocker.json` | iOS 素の Safari Content Blocker 用（ネットワークのみ） |
 
 ## 導入（AdGuard for iOS）

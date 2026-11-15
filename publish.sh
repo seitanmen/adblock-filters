@@ -22,10 +22,13 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
 CHECK_ONLY=0
 [ "${1:-}" = "--check" ] && CHECK_ONLY=1
 
-FILES=(latest.txt adblock-generic.txt gamewith-adguard-filter.txt gamewith-safari-content-blocker.json README.md)
+FILES=(latest.txt adblock-generic.txt gamewith-adguard-filter.txt doublecodes-adguard-filter.txt gamewith-safari-content-blocker.json README.md)
 
 # --- token ---------------------------------------------------------------
 TOKEN="${GH_TOKEN:-}"
+if [ -z "$TOKEN" ] && command -v gh >/dev/null 2>&1; then
+  TOKEN="$(gh auth token 2>/dev/null || true)"
+fi
 if [ -z "$TOKEN" ] && command -v security >/dev/null 2>&1; then
   TOKEN="$(security find-generic-password -s "$KEYCHAIN_SVC" -w 2>/dev/null || true)"
 fi

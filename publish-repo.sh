@@ -27,7 +27,7 @@ DIR="$(cd "$(dirname "$0")" && pwd)"
 CHECK_ONLY=0
 [ "${1:-}" = "--check" ] && CHECK_ONLY=1
 
-FILES=(latest.txt adblock-generic.txt gamewith-adguard-filter.txt gamewith-safari-content-blocker.json README.md)
+FILES=(latest.txt adblock-generic.txt gamewith-adguard-filter.txt doublecodes-adguard-filter.txt gamewith-safari-content-blocker.json README.md)
 
 # --- token（検証用・任意） -------------------------------------------------
 TOKEN="${GH_TOKEN:-}"
