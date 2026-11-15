@@ -128,6 +128,20 @@
 *.blogspot.com##.js-antiadblocker
 *.blogspot.com##.papW
 
+! --- Blogger の偽検知を避けるための例外（重要） ---
+!   Blogger の遮断判定は「pagead2.googlesyndication.com/pagead/js/adsbygoogle.js へ
+!   fetch できるか」で判定します。EasyList もこの URL を $xmlhttprequest 限定 +
+!   redirect でしか遮断せず、判定用 fetch は成功させる（＝偽検知回避）設計です。
+!   → 判定用 XHR だけを blogspot.com で許可し、<script> 側は遮断したままにします。
+!     これにより「AdBlock detected!」オーバーレイが出ません。
+blogspot.com@@||pagead2.googlesyndication.com/pagead/js/adsbygoogle.js$xmlhttprequest
+
+! --- 判定ではなく「表示」を止める（多層防御） ---
+!   ※ ドメインは blogspot.com 形式（サブドメインも含む）を使います。
+!     *.blogspot.com はエンジンにより解釈が曖昧なため併記します。
+blogspot.com##.js-antiadblocker
+blogspot.com##.papW
+
 ! ---------------------------------------------------------------------------
 ! [5] 任意（トラッキング・セッション計測まで止める場合）
 ! ---------------------------------------------------------------------------

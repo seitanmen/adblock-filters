@@ -21,6 +21,12 @@
 doublecodes.blogspot.com##.js-antiadblocker
 doublecodes.blogspot.com##.papW
 
-! --- 広告（AdSense auto-ads）: ネットワーク側で遮断 ---
-||pagead2.googlesyndication.com/pagead/js/adsbygoogle.js$domain=doublecodes.blogspot.com
-||pagead2.googlesyndication.com/pagead/js/adsbygoogle.js$domain=*.blogspot.com
+! --- 広告（AdSense auto-ads）: <script> だけを遮断 ---
+!   ★ 判定用 fetch（同じ URL の XHR）を遮断すると Blogger が必ず
+!     「遮断あり」と判定して "AdBlock detected!" を出します。
+!     → $script を付けて script のみ遮断し、XHR は通します（EasyList と同じ考え方）。
+||pagead2.googlesyndication.com/pagead/js/adsbygoogle.js$script$domain=doublecodes.blogspot.com
+||pagead2.googlesyndication.com/pagead/js/adsbygoogle.js$script$domain=blogspot.com
+
+! --- Blogger 判定用 fetch の許可（blogspot.com 全体）---
+blogspot.com@@||pagead2.googlesyndication.com/pagead/js/adsbygoogle.js$xmlhttprequest
